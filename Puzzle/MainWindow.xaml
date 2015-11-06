@@ -3,15 +3,16 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:sys="clr-namespace:System;assembly=System"
         Title="Puzzle"
-        Height="{Binding Height, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-        Width="{Binding  Width,  UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-        ResizeMode="NoResize"
         WindowStartupLocation="CenterScreen"
         Background="#FF2F5F2E"
         >
     <Window.CommandBindings>
         <CommandBinding Command="Play" Executed="CommandBinding_Executed" CanExecute="CommandBinding_CanExecute"/>
     </Window.CommandBindings>
+
+    <Window.Resources>
+        <CroppedBitmap x:Key="TheBurningRange" Source="TheBurningRange.jpg" />
+    </Window.Resources>
 
     <Grid>
         <Grid.RowDefinitions>
@@ -29,9 +30,16 @@
             <ItemsControl ItemsSource="{Binding Cells}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <Button Command="Play" CommandParameter="{Binding}" x:Name="button" Content="{Binding}" Height="66" Width="66" FontFamily="Snap ITC" Foreground="Red" />
+                        <Button Command="Play" CommandParameter="{Binding Index}"
+                                x:Name="button" HorizontalAlignment="Stretch" VerticalContentAlignment="Stretch">
+                            <Image>
+                                <Image.Source>
+                                    <CroppedBitmap Source="{StaticResource TheBurningRange}" SourceRect="{Binding SourceRect}"/>
+                                </Image.Source>
+                            </Image>
+                        </Button>
                         <DataTemplate.Triggers>
-                            <DataTrigger Value="0" Binding="{Binding}">
+                            <DataTrigger Value="0" Binding="{Binding Index}">
                                 <DataTrigger.Setters>
                                     <Setter TargetName="button" Property="Visibility" Value="Hidden"/>
                                 </DataTrigger.Setters>

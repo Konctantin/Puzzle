@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Windows.Media.Imaging;
 
 namespace Puzzle
 {
@@ -11,7 +12,7 @@ namespace Puzzle
     {
         public IEnumerable<int> Sizes { get; private set; } = Enumerable.Range(4, 7);
 
-        public ObservableCollection<int> Cells { get; private set; } = new ObservableCollection<int>();
+        public ObservableCollection<PuzzleUnit> Cells { get; private set; } = new ObservableCollection<PuzzleUnit>();
 
         public PuzzleModel()
         {
@@ -19,6 +20,11 @@ namespace Puzzle
         }
 
         #region Properties
+
+        public CroppedBitmap Image
+        {
+            get; set;
+        }
 
         double height;
         public double Height
@@ -78,6 +84,10 @@ namespace Puzzle
 
         #endregion
 
+        public void LoadImage()
+        {
+        }
+
         void Fill(int max = 4)
         {
             MaxColumns = max;
@@ -86,22 +96,26 @@ namespace Puzzle
 
             Cells.Clear();
 
+            Image = (CroppedBitmap)App.Current.FindResource("TheBurningRange");
+
             var random = new Random();
             var size   = MaxColumns * MaxColumns;
             var list   = Enumerable.Range(0, size).ToList();
 
-            while (list.Count > 0)
-            {
-                int index = random.Next(0, list.Count - 1);
-                Cells.Add(list[index]);
-                list.RemoveAt(index);
-            }
+            foreach (var i in list) Cells.Add(new PuzzleUnit(i, this));
+
+            //while (list.Count > 0)
+            //{
+            //    int index = random.Next(0, list.Count - 1);
+            //    Cells.Add(new PuzzleUnit(list[index], this));
+            //    list.RemoveAt(index);
+            //}
         }
 
         public bool IsCorrect()
         {
             for (int i = 0; i < Cells.Count; ++i)
-                if (Cells[i] != i)
+                if (Cells[i].Index != i)
                     return false;
             return true;
         }
@@ -114,10 +128,10 @@ namespace Puzzle
 
             for (int i = 0; i < Cells.Count; ++i)
             {
-                if (Cells[i] == 0)
+                if (Cells[i].Index == 0)
                     zeroIndex = i;
 
-                if (Cells[i] == current)
+                if (Cells[i].Index == current)
                     curIndex = i;
             }
 

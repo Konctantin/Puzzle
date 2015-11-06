@@ -22,8 +22,8 @@ namespace Puzzle
                 Debug.WriteLine($"Diff = {zero - cur}; ({cur} + 1) % {Model.MaxColumns} = {(cur + 1) % Model.MaxColumns}; curIndex - zero = {cur - zero}");
 
                 if (canMove) {
-                    Model.Cells[zero] = val;
-                    Model.Cells[cur] = 0;
+                    Model.Cells[zero].Index = val;
+                    Model.Cells[cur].Index = 0;
                 }
             });
 
