@@ -1,37 +1,34 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
+﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Media.Imaging;
 
 namespace Puzzle
 {
     public class PuzzleUnit : INotifyPropertyChanged
     {
-        PuzzleModel puzzleModel;
+        public PuzzleModel Parent { get; private set; }
 
         public PuzzleUnit(int index, PuzzleModel puzzle)
         {
-            puzzleModel = puzzle;
+            Parent = puzzle;
             Index = index;
             Calc();
         }
 
         void Calc()
         {
-            var xsize = puzzleModel.Image.PixelWidth  / puzzleModel.MaxColumns;
-            var ysize = puzzleModel.Image.PixelHeight / puzzleModel.MaxColumns;
+            var xsize = Parent.ImageSource.PixelWidth  / Parent.MaxColumns;
+            var ysize = Parent.ImageSource.PixelHeight / Parent.MaxColumns;
 
-            var col = Index % puzzleModel.MaxColumns;
-            var row = Index / puzzleModel.MaxColumns;
+            var col = Index % Parent.MaxColumns;
+            var row = Index / Parent.MaxColumns;
 
             var x = xsize * col;
             var y = ysize * row;
 
-            SourceRect = new Int32Rect(x, y, xsize, ysize);
+            var rect = new Int32Rect(x, y, xsize, ysize);
+            ImageSource = new CroppedBitmap(Parent.ImageSource, rect);
         }
 
         #region Propertis
@@ -51,15 +48,15 @@ namespace Puzzle
             }
         }
 
-        Int32Rect sourceRect;
-        public Int32Rect SourceRect
+        CroppedBitmap imageSource;
+        public CroppedBitmap ImageSource
         {
-            get { return sourceRect; }
-            set
+            get { return imageSource; }
+            private set
             {
-                if (value != sourceRect)
+                if (value != imageSource)
                 {
-                    sourceRect = value;
+                    imageSource = value;
                     RaiseEvent();
                 }
             }

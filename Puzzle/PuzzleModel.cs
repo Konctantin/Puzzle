@@ -14,47 +14,24 @@ namespace Puzzle
 
         public ObservableCollection<PuzzleUnit> Cells { get; private set; } = new ObservableCollection<PuzzleUnit>();
 
-        public PuzzleModel()
-        {
-            Fill();
-        }
-
         #region Properties
 
-        public CroppedBitmap Image
+        BitmapSource imageSource;
+        public BitmapSource ImageSource
         {
-            get; set;
-        }
-
-        double height;
-        public double Height
-        {
-            get { return height; }
-            private set
+            get { return imageSource; }
+            set
             {
-                if (Math.Abs(value - height) > double.Epsilon)
+                if (value != imageSource)
                 {
-                    height = value;
+                    imageSource = value;
                     RaiseEvent();
+                    Fill();
                 }
             }
         }
 
-        double wight;
-        public double Width
-        {
-            get { return wight; }
-            private set
-            {
-                if (Math.Abs(value - wight) > double.Epsilon)
-                {
-                    wight = value;
-                    RaiseEvent();
-                }
-            }
-        }
-
-        int maxColumns;
+        int maxColumns = 4;
         public int MaxColumns
         {
             get { return maxColumns; }
@@ -64,7 +41,7 @@ namespace Puzzle
                 {
                     maxColumns = value;
                     RaiseEvent();
-                    Fill(value);
+                    Fill();
                 }
             }
         }
@@ -88,28 +65,28 @@ namespace Puzzle
         {
         }
 
-        void Fill(int max = 4)
+        void Fill()
         {
-            MaxColumns = max;
-            Width  = 96d * max;
-            Height = 96d * max;
-
+            //MaxColumns = max;
             Cells.Clear();
-
-            Image = (CroppedBitmap)App.Current.FindResource("TheBurningRange");
 
             var random = new Random();
             var size   = MaxColumns * MaxColumns;
             var list   = Enumerable.Range(0, size).ToList();
 
-            foreach (var i in list) Cells.Add(new PuzzleUnit(i, this));
-
-            //while (list.Count > 0)
-            //{
-            //    int index = random.Next(0, list.Count - 1);
-            //    Cells.Add(new PuzzleUnit(list[index], this));
-            //    list.RemoveAt(index);
-            //}
+#if DEBUG
+            // enumerable fill
+            foreach (var i in list)
+                Cells.Add(new PuzzleUnit(i, this));
+#else
+            // random fill
+            while (list.Count > 0)
+            {
+                int index = random.Next(0, list.Count - 1);
+                Cells.Add(new PuzzleUnit(list[index], this));
+                list.RemoveAt(index);
+            }
+#endif
         }
 
         public bool IsCorrect()
@@ -146,7 +123,7 @@ namespace Puzzle
             predicate(canMove, zeroIndex, curIndex);
         }
 
-        #region INotifyPropertyChanged
+#region INotifyPropertyChanged
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -157,6 +134,6 @@ namespace Puzzle
                 handler(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        #endregion
+#endregion
     }
 }

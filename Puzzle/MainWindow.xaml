@@ -5,14 +5,14 @@
         Title="Puzzle"
         WindowStartupLocation="CenterScreen"
         Background="#FF2F5F2E"
+        Width="1000"
+        Height="800"
         >
     <Window.CommandBindings>
-        <CommandBinding Command="Play" Executed="CommandBinding_Executed" CanExecute="CommandBinding_CanExecute"/>
+        <CommandBinding Command="Play"  Executed="CommandBinding_Play_Executed" CanExecute="CommandBinding_Play_CanExecute"/>
+        <CommandBinding Command="Open"  Executed="CommandBinding_Open_Executed" />
+        <CommandBinding Command="Close" Executed="CommandBinding_Close_Executed" />
     </Window.CommandBindings>
-
-    <Window.Resources>
-        <CroppedBitmap x:Key="TheBurningRange" Source="TheBurningRange.jpg" />
-    </Window.Resources>
 
     <Grid>
         <Grid.RowDefinitions>
@@ -20,23 +20,31 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <StackPanel Orientation="Horizontal">
-            <TextBlock Text="Grid size: " VerticalAlignment="Center" Margin="20,0,0,0"/>
-            <ComboBox ItemsSource="{Binding Sizes}" SelectedItem="{Binding MaxColumns}" Margin="0,2,0,2"/>
-            <CheckBox Content="Use helper" Margin="10,0,0,0" VerticalContentAlignment="Center" IsChecked="{Binding UseHepler}"/>
-        </StackPanel>
+        <Menu>
+            <MenuItem Header="Game">
+                <MenuItem Header="Open" Command="Open" />
+                <MenuItem Header="Use helper" IsCheckable="True" IsChecked="{Binding UseHepler}" />
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Grid size: " VerticalAlignment="Center"/>
+                    <ComboBox ItemsSource="{Binding Sizes}" SelectedItem="{Binding MaxColumns}" Margin="2">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding StringFormat={}{0}x{0}}"/>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                </StackPanel>
+                <MenuItem Header="Exit" Command="Close" />
+            </MenuItem>
+        </Menu>
+
 
         <Border Grid.Row="1" BorderBrush="Black" BorderThickness="1">
             <ItemsControl ItemsSource="{Binding Cells}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <Button Command="Play" CommandParameter="{Binding Index}"
-                                x:Name="button" HorizontalAlignment="Stretch" VerticalContentAlignment="Stretch">
-                            <Image>
-                                <Image.Source>
-                                    <CroppedBitmap Source="{StaticResource TheBurningRange}" SourceRect="{Binding SourceRect}"/>
-                                </Image.Source>
-                            </Image>
+                        <Button Command="Play" CommandParameter="{Binding Index}" x:Name="button">
+                            <Image Stretch="Fill" Source="{Binding ImageSource}" />
                         </Button>
                         <DataTemplate.Triggers>
                             <DataTrigger Value="0" Binding="{Binding Index}">
