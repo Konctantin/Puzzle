@@ -9,6 +9,8 @@ namespace Puzzle
     {
         public PuzzleModel Parent { get; private set; }
 
+        public CroppedBitmap ImageSource { get; private set; }
+
         public PuzzleUnit(int index, PuzzleModel puzzle)
         {
             Parent = puzzle;
@@ -44,20 +46,7 @@ namespace Puzzle
                     index = value;
                     RaiseEvent();
                     Calc();
-                }
-            }
-        }
-
-        CroppedBitmap imageSource;
-        public CroppedBitmap ImageSource
-        {
-            get { return imageSource; }
-            private set
-            {
-                if (value != imageSource)
-                {
-                    imageSource = value;
-                    RaiseEvent();
+                    RaiseEvent("ImageSource");
                 }
             }
         }

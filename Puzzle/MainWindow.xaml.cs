@@ -20,9 +20,10 @@ namespace Puzzle
         void CommandBinding_Play_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             int val = (int)e.Parameter;
+
+            // his action can be moved to PuzzleModel
             Model.DoAction(val, (canMove, zero, cur) =>
             {
-
                 Debug.WriteLine($"Diff = {zero - cur}; ({cur} + 1) % {Model.MaxColumns} = {(cur + 1) % Model.MaxColumns}; curIndex - zero = {cur - zero}");
 
                 if (canMove)
@@ -34,14 +35,6 @@ namespace Puzzle
 
             if (Model.IsCorrect())
                 MessageBox.Show("Congratulation, you win!", "Puzzle", MessageBoxButton.OK, MessageBoxImage.Information);
-        }
-
-        void CommandBinding_Play_CanExecute(object sender, CanExecuteRoutedEventArgs e)
-        {
-            if (Model.UseHepler)
-                Model.DoAction((int)e.Parameter, (canMove, zero, cur) => e.CanExecute = canMove);
-            else
-                e.CanExecute = true;
         }
 
         void CommandBinding_Open_Executed(object sender, ExecutedRoutedEventArgs e)

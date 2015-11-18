@@ -46,24 +46,7 @@ namespace Puzzle
             }
         }
 
-        bool useHelper;
-        public bool UseHepler
-        {
-            get { return useHelper; }
-            set {
-                if (value != useHelper)
-                {
-                    useHelper = value;
-                    RaiseEvent();
-                }
-            }
-        }
-
         #endregion
-
-        public void LoadImage()
-        {
-        }
 
         void Fill()
         {

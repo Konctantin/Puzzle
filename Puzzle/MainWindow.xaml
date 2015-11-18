@@ -9,7 +9,7 @@
         Height="800"
         >
     <Window.CommandBindings>
-        <CommandBinding Command="Play"  Executed="CommandBinding_Play_Executed" CanExecute="CommandBinding_Play_CanExecute"/>
+        <CommandBinding Command="Play"  Executed="CommandBinding_Play_Executed" />
         <CommandBinding Command="Open"  Executed="CommandBinding_Open_Executed" />
         <CommandBinding Command="Close" Executed="CommandBinding_Close_Executed" />
     </Window.CommandBindings>
@@ -23,7 +23,6 @@
         <Menu>
             <MenuItem Header="Game">
                 <MenuItem Header="Open" Command="Open" />
-                <MenuItem Header="Use helper" IsCheckable="True" IsChecked="{Binding UseHepler}" />
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="Grid size: " VerticalAlignment="Center"/>
                     <ComboBox ItemsSource="{Binding Sizes}" SelectedItem="{Binding MaxColumns}" Margin="2">
