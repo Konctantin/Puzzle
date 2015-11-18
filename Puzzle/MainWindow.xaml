@@ -42,8 +42,8 @@
             <ItemsControl ItemsSource="{Binding Cells}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <Button Command="Play" CommandParameter="{Binding Index}" x:Name="button">
-                            <Image Stretch="Fill" Source="{Binding ImageSource}" />
+                        <Button Command="Play" CommandParameter="{Binding Index}" x:Name="button" BorderThickness="0">
+                            <Image Stretch="Fill" Source="{Binding ImageSource}" Margin="-1" />
                         </Button>
                         <DataTemplate.Triggers>
                             <DataTrigger Value="0" Binding="{Binding Index}">
